@@ -21,6 +21,7 @@ interface Content {
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<TabId>('app');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const tabs: Tab[] = [
     { id: 'app', label: 'App' },
@@ -48,6 +49,21 @@ export default function Home() {
         'Best practices'
       ]
     }
+  };
+
+  const highlightText = (text: string) => {
+    if (!searchQuery) return text;
+    
+    const regex = new RegExp(`(${searchQuery})`, 'gi');
+    return text.split(regex).map((part, i) => 
+      regex.test(part) ? (
+        <span key={i} className="bg-yellow-200 dark:bg-yellow-800">
+          {part}
+        </span>
+      ) : (
+        part
+      )
+    );
   };
 
   return (
@@ -82,6 +98,8 @@ export default function Home() {
               <input
                 type="text"
                 placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full h-10 pl-4 pr-10 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <svg
@@ -149,10 +167,10 @@ export default function Home() {
             <div className="flex-1">
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                  {content[activeTab].title}
+                  {highlightText(content[activeTab].title)}
                 </h2>
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  {content[activeTab].description}
+                  {highlightText(content[activeTab].description)}
                 </p>
                 <ul className="space-y-2">
                   {content[activeTab].features.map((feature: string, index: number) => (
@@ -171,7 +189,7 @@ export default function Home() {
                           d="M5 13l4 4L19 7"
                         />
                       </svg>
-                      {feature}
+                      {highlightText(feature)}
                     </li>
                   ))}
                 </ul>
