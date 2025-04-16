@@ -33,7 +33,7 @@ export default function Home() {
   const [inputText, setInputText] = useState('');
   const [timer, setTimer] = useState(0);
   const chatAreaRef = useRef<HTMLDivElement>(null);
-  const timerRef = useRef<NodeJS.Timeout>();
+  const timerRef = useRef<NodeJS.Timeout>(null);
 
   const tabs: Tab[] = [
     { id: 'app', label: 'App' },
